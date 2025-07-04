@@ -1,0 +1,6 @@
+@LendingService_HostAddress = http://localhost:5176
+
+GET {{LendingService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
