@@ -1,5 +1,6 @@
 ﻿using UserService.Application.DTOs;
 using UserService.Domain.Entities;
+using UserService.Exceptions;
 using UserService.Infrastructure.Repositories;
 
 namespace UserService.Services
@@ -32,6 +33,9 @@ namespace UserService.Services
         {
             var user = await _userRepository.GetUserByEmail(email, cancellationToken);
 
+            if (user is null)
+                throw new NotFoundException($"User with email:{email} not found");
+
             var userResponseDTO = new UserResponseDTO
             {
                 Id = user.Id,
@@ -46,6 +50,9 @@ namespace UserService.Services
         public async Task<UserResponseDTO> GetUserByIdAsync(int id, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetUserById(id, cancellationToken);
+
+            if (user is null)
+                throw new NotFoundException($"User with id:{id} not found");
 
             var userResponseDTO = new UserResponseDTO
             {
