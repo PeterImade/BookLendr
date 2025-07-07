@@ -3,6 +3,7 @@ using UserService.Infrastructure.Data;
 using FluentValidation; 
 using UserService.Infrastructure.Repositories;
 using UserService.Services;
+using UserService.Exceptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(x => x.UseSqlServer(builder.
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserBLService>();
 
+builder.Services.AddExceptionHandler<GlobalMiddlewareHandler>();
+builder.Services.AddProblemDetails();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -25,6 +29,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
 

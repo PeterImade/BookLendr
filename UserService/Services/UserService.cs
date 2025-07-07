@@ -13,7 +13,7 @@ namespace UserService.Services
             _userRepository = userRepository;
         } 
 
-        public async Task RegisterUserAsync(UserRegisterDTO registerDTO)
+        public async Task RegisterUserAsync(UserRegisterDTO registerDTO, CancellationToken cancellationToken)
         {
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password);
 
@@ -25,12 +25,12 @@ namespace UserService.Services
                 PasswordHash = hashedPassword
             };
 
-            await _userRepository.CreateUser(user);
+            await _userRepository.CreateUser(user, cancellationToken);
         }
 
-        public async Task<UserResponseDTO> GetUserByEmailAsync(string email)
+        public async Task<UserResponseDTO> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserByEmail(email);
+            var user = await _userRepository.GetUserByEmail(email, cancellationToken);
 
             var userResponseDTO = new UserResponseDTO
             {
@@ -43,9 +43,9 @@ namespace UserService.Services
             return userResponseDTO;
         }
 
-        public async Task<UserResponseDTO> GetUserByIdAsync(int id)
+        public async Task<UserResponseDTO> GetUserByIdAsync(int id, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetUserById(id);
+            var user = await _userRepository.GetUserById(id, cancellationToken);
 
             var userResponseDTO = new UserResponseDTO
             {

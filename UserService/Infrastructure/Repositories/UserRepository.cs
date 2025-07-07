@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System.Threading;
 using UserService.Domain.Entities;
 using UserService.Infrastructure.Data;
 
@@ -12,21 +13,21 @@ namespace UserService.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task CreateUser(User user)
+        public async Task CreateUser(User user, CancellationToken cancellationToken)
         { 
-            _dbContext.Users.Add(user);
-            await _dbContext.SaveChangesAsync();
+           await _dbContext.Users.AddAsync(user, cancellationToken);
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task<User?> GetUserByEmail(string email)
+        public async Task<User?> GetUserByEmail(string email, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email);
+            var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
             return user;
         }
 
-        public async Task<User?> GetUserById(int id)
+        public async Task<User?> GetUserById(int id, CancellationToken cancellationToken)
         {
-            var user = await _dbContext.Users.FindAsync(id);
+            var user = await _dbContext.Users.FindAsync(id, cancellationToken);
             return user;
         }
     }
