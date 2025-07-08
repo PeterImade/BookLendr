@@ -4,6 +4,8 @@ using FluentValidation;
 using UserService.Infrastructure.Repositories;
 using UserService.Services;
 using UserService.Exceptions;
+using System.Reflection;
+using UserService.Application.Queries;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +19,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<UserRepository>();
 builder.Services.AddScoped<UserBLService>();
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssemblies(
+        typeof(Program).Assembly,
+        typeof(GetUserByEmailQuery).Assembly
+    );
+});
 
 builder.Services.AddExceptionHandler<GlobalMiddlewareHandler>();
 builder.Services.AddProblemDetails();
