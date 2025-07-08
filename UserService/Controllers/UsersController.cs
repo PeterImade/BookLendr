@@ -7,7 +7,7 @@ using UserService.Application.Queries;
 
 namespace UserService.Controllers
 {
-    [Route("api/users")]
+    [Route("users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
