@@ -23,14 +23,13 @@ namespace UserService.Controllers
         {
             var command = new CreateUserCommand { UserRegisterDTO = userRegisterDTO };
             await _mediator.Send(command);
-            return Ok("User registered successfully");
+            return StatusCode(201, "User registered successfully");
         }
 
         [HttpGet] 
         public async Task<ActionResult<UserResponseDTO>> GetUserByEmail([FromQuery] GetUserByEmailQuery query)
         { 
-            var user = await _mediator.Send(query);
-
+            var user = await _mediator.Send(query); 
             return Ok(user);
         }
     }

@@ -30,5 +30,11 @@ namespace UserService.Infrastructure.Repositories
             var user = await _dbContext.Users.FindAsync(id, cancellationToken);
             return user;
         }
+
+        public async Task<bool> CheckUserExists(string email, CancellationToken cancellationToken)
+        {
+            var userExists = await _dbContext.Users.AnyAsync(x => x.Email.Equals(email),cancellationToken);
+            return userExists;
+        }
     }
 }

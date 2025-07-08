@@ -16,6 +16,11 @@ namespace UserService.Services
 
         public async Task RegisterUserAsync(UserRegisterDTO registerDTO, CancellationToken cancellationToken)
         {
+            var userExists = await _userRepository.CheckUserExists(registerDTO.Email, cancellationToken);
+
+            if (userExists)
+                throw new BadRequestException("Email is already taken");
+
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password);
 
             var user = new User

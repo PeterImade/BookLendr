@@ -6,13 +6,18 @@ using UserService.Services;
 using UserService.Exceptions;
 using System.Reflection;
 using UserService.Application.Queries;
+using UserService.Application.Validators;
+using UserService.Application.DTOs;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-builder.Services.AddValidatorsFromAssembly(typeof(Program).Assembly);
+//builder.Services.AddControllers()
+//    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserValidator>());
+
+
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
