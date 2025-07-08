@@ -13,10 +13,11 @@ namespace UserService.Infrastructure.Repositories
         {
             _dbContext = dbContext;
         }
-        public async Task CreateUser(User user, CancellationToken cancellationToken)
+        public async Task<User> CreateUser(User user, CancellationToken cancellationToken)
         { 
-           await _dbContext.Users.AddAsync(user, cancellationToken);
+            var entity = await _dbContext.Users.AddAsync(user, cancellationToken);
             await _dbContext.SaveChangesAsync(cancellationToken);
+            return entity.Entity;
         }
 
         public async Task<User?> GetUserByEmail(string email, CancellationToken cancellationToken)

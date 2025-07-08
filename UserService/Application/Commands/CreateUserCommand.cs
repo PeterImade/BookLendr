@@ -1,27 +1,39 @@
-﻿using MediatR;
+﻿using MassTransit;
+using MediatR;
 using UserService.Application.DTOs;
+using UserService.Application.Events;
 using UserService.Services;
 
 namespace UserService.Application.Commands
 {
-    public class CreateUserCommand: IRequest<Unit>
+    public class CreateUserCommand: IRequest<UserResponseDTO>
     {
         public required UserRegisterDTO UserRegisterDTO { get; set; }
     }
 
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, Unit>
+    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserResponseDTO>
     {
         private readonly UserBLService _userBLService;
+        private readonly IPublishEndpoint _publishEndpoint;
 
-        public CreateUserCommandHandler(UserBLService userBLService)
+
+        public CreateUserCommandHandler(UserBLService userBLService, IPublishEndpoint publishEndpoint)
         {
             _userBLService = userBLService;
+            _publishEndpoint = publishEndpoint;
         }
-        public async Task<Unit> Handle(CreateUserCommand request, CancellationToken cancellationToken)
+        public async Task<UserResponseDTO> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            await _userBLService.RegisterUserAsync(request.UserRegisterDTO, cancellationToken);
+            var user = await _userBLService.RegisterUserAsync(request.UserRegisterDTO, cancellationToken);
 
-            return Unit.Value;
+            await _publishEndpoint.Publish(new UserRegisteredEvent
+            {
+                Id = user.Id,
+                Email = user.Email,
+                FullName = $"{user.FirstName} {user.LastName}",
+            });
+
+            return user;
         }
     }
 }

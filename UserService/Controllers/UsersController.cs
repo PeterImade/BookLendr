@@ -23,7 +23,7 @@ namespace UserService.Controllers
         {
             var command = new CreateUserCommand { UserRegisterDTO = userRegisterDTO };
             await _mediator.Send(command);
-            return StatusCode(201, "User registered successfully");
+            return StatusCode(201, command);
         }
 
         [HttpGet] 

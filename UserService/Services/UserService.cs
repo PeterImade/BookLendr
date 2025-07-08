@@ -14,7 +14,7 @@ namespace UserService.Services
             _userRepository = userRepository;
         } 
 
-        public async Task RegisterUserAsync(UserRegisterDTO registerDTO, CancellationToken cancellationToken)
+        public async Task<UserResponseDTO> RegisterUserAsync(UserRegisterDTO registerDTO, CancellationToken cancellationToken)
         {
             var userExists = await _userRepository.CheckUserExists(registerDTO.Email, cancellationToken);
 
@@ -31,7 +31,17 @@ namespace UserService.Services
                 PasswordHash = hashedPassword
             };
 
-            await _userRepository.CreateUser(user, cancellationToken);
+            var createdUser = await _userRepository.CreateUser(user, cancellationToken);
+
+            var userResponseDTO = new UserResponseDTO 
+            {
+                Id = createdUser.Id,
+                Email = createdUser.Email,
+                FirstName = createdUser.FirstName,
+                LastName = createdUser.LastName
+            };
+
+            return userResponseDTO;
         }
 
         public async Task<UserResponseDTO> GetUserByEmailAsync(string email, CancellationToken cancellationToken)

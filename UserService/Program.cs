@@ -8,15 +8,14 @@ using System.Reflection;
 using UserService.Application.Queries;
 using UserService.Application.Validators;
 using UserService.Application.DTOs;
+using FluentValidation.AspNetCore;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-//builder.Services.AddControllers()
-//    .AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserValidator>());
-
-
+builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidatorsFromAssemblyContaining<CreateUserValidator>());
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -31,6 +30,15 @@ builder.Services.AddMediatR(cfg =>
         typeof(GetUserByEmailQuery).Assembly
     );
 });
+
+builder.Services.AddMassTransit(x => x.UsingRabbitMq((context, cfg) =>
+{
+    cfg.Host("localhost", "/", h =>
+    {
+        h.Username("guest");
+        h.Password("guest");
+    });
+}));
 
 builder.Services.AddExceptionHandler<GlobalMiddlewareHandler>();
 builder.Services.AddProblemDetails();
