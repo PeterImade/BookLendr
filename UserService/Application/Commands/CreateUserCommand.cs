@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using Contracts.Events;
+using MassTransit;
 using MediatR;
 using UserService.Application.DTOs;
 using UserService.Application.Events;
@@ -11,7 +12,7 @@ namespace UserService.Application.Commands
         public required UserRegisterDTO UserRegisterDTO { get; set; }
     }
 
-    public class CreateUserCommandHandler : IRequestHandler<CreateUserCommand, UserResponseDTO>
+    public class CreateUserCommandHandler: IRequestHandler<CreateUserCommand, UserResponseDTO>
     {
         private readonly UserBLService _userBLService;
         private readonly IPublishEndpoint _publishEndpoint;
@@ -31,7 +32,7 @@ namespace UserService.Application.Commands
                 Id = user.Id,
                 Email = user.Email,
                 FullName = $"{user.FirstName} {user.LastName}",
-            });
+            }, cancellationToken);
 
             return user;
         }
