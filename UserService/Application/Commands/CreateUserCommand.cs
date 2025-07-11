@@ -1,8 +1,7 @@
 ﻿using Contracts.Events;
 using MassTransit;
 using MediatR;
-using UserService.Application.DTOs;
-using UserService.Application.Events;
+using UserService.Application.DTOs; 
 using UserService.Services;
 
 namespace UserService.Application.Commands
