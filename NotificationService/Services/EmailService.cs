@@ -1,4 +1,5 @@
 ﻿using MimeKit;
+using System.Net;
 using System.Net.Mail;
 
 namespace NotificationService.Services
@@ -16,37 +17,23 @@ namespace NotificationService.Services
         {
             var smtpSection = _configuration.GetSection("SmtpSettings");
 
-            var message = new MimeMessage();
-
-            message.From.Add(new MailboxAddress(
-                smtpSection["FromName"],
-                smtpSection["FromEmail"]
-                ));
-
-            message.To.Add(MailboxAddress.Parse(toEmail));
-            message.Subject = subject;
-
-            message.Body = new TextPart("plain")
+            using var client = new SmtpClient(smtpSection["Host"], int.Parse(smtpSection["Port"]))
             {
-                Text = body
+                Credentials = new NetworkCredential(smtpSection["UserName"], smtpSection["Password"]),
+                EnableSsl = true
             };
 
-            using var client = new MailKit.Net.Smtp.SmtpClient(); 
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(smtpSection["FromEmail"], smtpSection["FromName"]),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = false
+            };
 
-            await client.ConnectAsync(
-                smtpSection["Host"],
-                int.Parse(smtpSection["Port"]),
-                false
-            );
+            mailMessage.To.Add(toEmail);
 
-            await client.AuthenticateAsync(
-           smtpSection["UserName"],
-           smtpSection["Password"]
-            );
-
-
-            await client.SendAsync(message);
-            await client.DisconnectAsync(true); 
+            await client.SendMailAsync(mailMessage);
         }
     }
 }
