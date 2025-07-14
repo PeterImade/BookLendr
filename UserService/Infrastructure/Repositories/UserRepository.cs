@@ -37,5 +37,12 @@ namespace UserService.Infrastructure.Repositories
             var userExists = await _dbContext.Users.AnyAsync(x => x.Email.Equals(email),cancellationToken);
             return userExists;
         }
+
+        public async Task SaveRefreshToken(User user, string refreshToken, DateTime refreshTokenExpiryTime, CancellationToken cancellationToken)
+        {
+            user.RefreshToken = refreshToken;
+            user.RefreshTokenExpiryTime = refreshTokenExpiryTime;
+            await _dbContext.SaveChangesAsync(cancellationToken);
+        }
     }
 }

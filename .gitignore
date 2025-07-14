@@ -1,11 +1,3 @@
-# Build files
-bin/
-obj/
+**/appsettings*.json
 
-.vs/
- 
-# Secrets
-secrets.json
-appsettings.Development.json
-appsettings.json
-appsettings.Local.json
+.vs

@@ -1,0 +1,12 @@
+{
+  "Version": 1,
+  "Hash": "1RNfPg36E/VGCuZJj0a3rXcUH6pBBQtiJtCCDAoI9wk=",
+  "Source": "LendingService",
+  "BasePath": "_content/LendingService",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": [],
+  "Endpoints": []
+}

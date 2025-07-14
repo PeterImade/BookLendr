@@ -25,6 +25,15 @@ namespace UserService.Controllers
             await _mediator.Send(command);
             return StatusCode(201, command);
         }
+        
+        [HttpPost("login")]
+        public async Task<IActionResult> LoginUser([FromBody] UserLoginDTO loginDTO)
+        {
+            var command = new LoginUserCommand { UserLoginDTO  = loginDTO };
+            await _mediator.Send(command);
+
+            return Ok(command);
+        }
 
         [HttpGet] 
         public async Task<ActionResult<UserResponseDTO>> GetUserByEmail([FromQuery] GetUserByEmailQuery query)

@@ -1,4 +1,10 @@
-﻿using UserService.Application.DTOs;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+using UserService.Application.DTOs;
 using UserService.Domain.Entities;
 using UserService.Exceptions;
 using UserService.Infrastructure.Repositories;
@@ -8,10 +14,13 @@ namespace UserService.Services
     public class UserBLService
     {
         private readonly UserRepository _userRepository;
+        private readonly IConfiguration _configuration;
+        private User? _user;
 
-        public UserBLService(UserRepository userRepository)
+        public UserBLService(UserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _configuration = configuration;
         } 
 
         public async Task<UserResponseDTO> RegisterUserAsync(UserRegisterDTO registerDTO, CancellationToken cancellationToken)
@@ -44,6 +53,84 @@ namespace UserService.Services
             return userResponseDTO;
         }
 
+
+        public async Task<TokenDTO> LoginUserAsync(UserLoginDTO userLoginDTO, CancellationToken cancellationToken)
+        {
+            var user = await _userRepository.GetUserByEmail(userLoginDTO.Email, cancellationToken);
+
+            if (user is null)
+                throw new BadRequestException("Email or password is incorrect");
+
+            _user = user;
+
+            var isPasswordVerified = BCrypt.Net.BCrypt.Verify(userLoginDTO.Password, user.PasswordHash);
+
+            if (!isPasswordVerified)
+            {
+                throw new BadRequestException("Email or password is incorrect");
+            }
+
+            var tokens = await CreateToken(cancellationToken);
+
+            return tokens;
+        }
+
+        public async Task<TokenDTO> CreateToken(CancellationToken cancellationToken)
+        {
+            var signingCredentials = GetSigningCredentials();
+            var claims = GetClaims();
+            var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
+            var refreshToken = GenerateRefreshToken(); 
+            await _userRepository.SaveRefreshToken(_user, refreshToken, DateTime.Now.AddDays(7), cancellationToken);
+            var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
+
+            return new TokenDTO { AccessToken = accessToken, RefreshToken = refreshToken };
+        }
+
+        private SigningCredentials GetSigningCredentials()
+        {
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var secretKey = jwtSettings["secretKey"];
+            var key = Encoding.UTF8.GetBytes(secretKey);
+            var secret = new SymmetricSecurityKey(key);
+            return new SigningCredentials(secret, SecurityAlgorithms.HmacSha256);
+        }
+
+        private List<Claim> GetClaims()
+        {
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.Name, _user.Email),
+                new Claim(ClaimTypes.NameIdentifier, _user.Id.ToString())
+            };
+
+            return claims;
+        }
+
+        private string GenerateRefreshToken()
+        {
+            var randomNumber = new byte[32];
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(randomNumber);
+            }
+            return Convert.ToBase64String(randomNumber);
+        }
+
+        private JwtSecurityToken GenerateTokenOptions(SigningCredentials signingCredentials, List<Claim> claims)
+        {
+            var jwtSettings = _configuration.GetSection("JwtSettings");
+            var tokenOptions = new JwtSecurityToken
+            (
+                issuer: jwtSettings["validIssuer"],
+                audience: jwtSettings["validAudience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"])),
+                signingCredentials: signingCredentials
+            );
+
+            return tokenOptions;
+        }
         public async Task<UserResponseDTO> GetUserByEmailAsync(string email, CancellationToken cancellationToken)
         {
             var user = await _userRepository.GetUserByEmail(email, cancellationToken);

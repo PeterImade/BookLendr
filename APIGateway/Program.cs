@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Authentication.BearerToken;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -10,6 +12,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddReverseProxy()
     .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
 
+builder.Services.AddAuthentication(BearerTokenDefaults.AuthenticationScheme)
+    .AddBearerToken();
 
 
 var app = builder.Build();
@@ -21,11 +25,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
-
-app.MapControllers();
 
 app.MapReverseProxy();
 
