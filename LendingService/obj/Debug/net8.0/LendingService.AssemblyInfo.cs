@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("LendingService")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0c70b8c6f5a4b6797370d69b4e54c6016cccc594")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+368f3f1e6a6fb1376312dd5278ed427c403251c8")]
 [assembly: System.Reflection.AssemblyProductAttribute("LendingService")]
 [assembly: System.Reflection.AssemblyTitleAttribute("LendingService")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
