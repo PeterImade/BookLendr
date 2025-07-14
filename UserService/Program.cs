@@ -1,8 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using UserService.Infrastructure.Data;
-using FluentValidation; 
+using FluentValidation;
 using UserService.Infrastructure.Repositories;
-using UserService.Services;
 using UserService.Exceptions;
 using System.Reflection;
 using UserService.Application.Queries;
@@ -10,6 +9,7 @@ using UserService.Application.Validators;
 using UserService.Application.DTOs;
 using FluentValidation.AspNetCore;
 using MassTransit;
+using UserService.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 

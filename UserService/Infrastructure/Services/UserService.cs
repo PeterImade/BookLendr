@@ -9,7 +9,7 @@ using UserService.Domain.Entities;
 using UserService.Exceptions;
 using UserService.Infrastructure.Repositories;
 
-namespace UserService.Services
+namespace UserService.Infrastructure.Services
 {
     public class UserBLService
     {
@@ -21,7 +21,7 @@ namespace UserService.Services
         {
             _userRepository = userRepository;
             _configuration = configuration;
-        } 
+        }
 
         public async Task<UserResponseDTO> RegisterUserAsync(UserRegisterDTO registerDTO, CancellationToken cancellationToken)
         {
@@ -42,7 +42,7 @@ namespace UserService.Services
 
             var createdUser = await _userRepository.CreateUser(user, cancellationToken);
 
-            var userResponseDTO = new UserResponseDTO 
+            var userResponseDTO = new UserResponseDTO
             {
                 Id = createdUser.Id,
                 Email = createdUser.Email,
@@ -80,7 +80,7 @@ namespace UserService.Services
             var signingCredentials = GetSigningCredentials();
             var claims = GetClaims();
             var tokenOptions = GenerateTokenOptions(signingCredentials, claims);
-            var refreshToken = GenerateRefreshToken(); 
+            var refreshToken = GenerateRefreshToken();
             await _userRepository.SaveRefreshToken(_user, refreshToken, DateTime.Now.AddDays(7), cancellationToken);
             var accessToken = new JwtSecurityTokenHandler().WriteToken(tokenOptions);
 

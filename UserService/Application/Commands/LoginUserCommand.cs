@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using UserService.Application.DTOs;
-using UserService.Services;
+using UserService.Infrastructure.Services;
 
 namespace UserService.Application.Commands
 {
