@@ -66,5 +66,14 @@ namespace BookService.Controllers
             await _mediator.Send(command, cancellationToken);
             return NoContent();
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPut]
+        public async Task<IActionResult> UpdateBook([FromBody] BookUpdateRequestDTO updateRequestDTO, CancellationToken cancellationToken)
+        {
+            var command = new UpdateBookCommand { BookUpdateRequestDTO = updateRequestDTO };
+            var result = await _mediator.Send(command, cancellationToken);
+            return Ok(result.Value);
+        }
     }
 }

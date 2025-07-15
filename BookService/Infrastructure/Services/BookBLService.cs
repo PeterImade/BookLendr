@@ -57,5 +57,28 @@ namespace BookService.Infrastructure.Services
 
             return Result<IEnumerable<BookResponseDTO>>.Success(response);
         }
+
+        public async Task<Result<BookResponseDTO>> UpdateBookAsync(BookUpdateRequestDTO bookUpdateRequestDTO, CancellationToken cancellationToken)
+        {
+            if (bookUpdateRequestDTO is null)
+            {
+                return Result<BookResponseDTO>.Failed("Request is null");
+            }
+
+            var existingBook = await _bookRepository.GetByIdAsync(bookUpdateRequestDTO.Id, cancellationToken);
+
+            if (existingBook is null)
+            {
+                return Result<BookResponseDTO>.Failed("Book not found");
+            }
+
+            var bookToUpdate = Mapper.ToUpdatedEntity(bookUpdateRequestDTO);
+
+            var updatedBook = await _bookRepository.UpdateAsync(bookToUpdate, cancellationToken);
+
+            var result = Mapper.ToDTO(updatedBook);
+
+            return Result<BookResponseDTO>.Success(result);
+        }
     }
 }

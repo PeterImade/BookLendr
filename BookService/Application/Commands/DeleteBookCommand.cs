@@ -5,7 +5,7 @@ namespace BookService.Application.Commands
 {
     public class DeleteBookCommand: IRequest<Unit>
     {
-        public int Id { get; set; }
+        public required int Id { get; set; }
     }
 
     public class DeleteBookCommandHandler : IRequestHandler<DeleteBookCommand, Unit>

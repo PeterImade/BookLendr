@@ -29,15 +29,22 @@ namespace BookService.Infrastructure.Repositories
 
         public async Task<IEnumerable<Book>> GetBooksAsync(CancellationToken cancellationToken)
         {
-            var books = await _context.Books.ToListAsync(cancellationToken);
+            var books = await _context.Books.AsNoTracking().ToListAsync(cancellationToken);
 
             return books;
         }
 
-        public async Task DeleteAsync(Book book, CancellationToken cancellationToken)
+        public async Task DeleteAsync(Book bookToDelete, CancellationToken cancellationToken)
         {
-            _context.Books.Remove(book);
+            _context.Books.Remove(bookToDelete);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<Book> UpdateAsync(Book bookToUpdate, CancellationToken cancellationToken)
+        {
+            var updatedBook = _context.Books.Update(bookToUpdate);
+            await _context.SaveChangesAsync();
+            return updatedBook.Entity;
         }
     }
 }
