@@ -1,10 +1,11 @@
-﻿using BookService.Domain.Entities;
+﻿using BookService.Application.Interfaces;
+using BookService.Domain.Entities;
 using BookService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace BookService.Infrastructure.Repositories
 {
-    public class BookRepository
+    public class BookRepository: IBookRepository
     {
         private readonly ApplicationDbContext _context;
 
@@ -29,7 +30,14 @@ namespace BookService.Infrastructure.Repositories
         public async Task<IEnumerable<Book>> GetBooksAsync(CancellationToken cancellationToken)
         {
             var books = await _context.Books.ToListAsync(cancellationToken);
+
             return books;
+        }
+
+        public async Task DeleteAsync(Book book, CancellationToken cancellationToken)
+        {
+            _context.Books.Remove(book);
+            await _context.SaveChangesAsync();
         }
     }
 }

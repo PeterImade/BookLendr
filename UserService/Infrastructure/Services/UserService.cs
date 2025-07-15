@@ -101,7 +101,8 @@ namespace UserService.Infrastructure.Services
             var claims = new List<Claim>()
             {
                 new Claim(ClaimTypes.Name, _user.Email),
-                new Claim(ClaimTypes.NameIdentifier, _user.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, _user.Id.ToString()),
+                new Claim(ClaimTypes.Role, _user.Role.ToString())
             };
 
             return claims;
@@ -122,8 +123,8 @@ namespace UserService.Infrastructure.Services
             var jwtSettings = _configuration.GetSection("JwtSettings");
             var tokenOptions = new JwtSecurityToken
             (
-                issuer: jwtSettings["validIssuer"],
-                audience: jwtSettings["validAudience"],
+                issuer: jwtSettings["Issuer"],
+                audience: jwtSettings["Audience"],
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(Convert.ToDouble(jwtSettings["expires"])),
                 signingCredentials: signingCredentials
