@@ -24,9 +24,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Application\Dtos\" />
+    <Folder Include="Application\Commands\" />
+    <Folder Include="Application\Queries\" />
     <Folder Include="Controllers\" />
     <Folder Include="Infrastructure\Services\" />
-    <Folder Include="Infrastructure\Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Contracts\Contracts.csproj" />
   </ItemGroup>
 
 </Project>
