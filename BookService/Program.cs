@@ -27,11 +27,12 @@ builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblies(
         typeof(Program).Assembly,
-        typeof(CreateBookCommand).Assembly
+        typeof(CreateBookCommand).Assembly //test this
     );
 });
 
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(BookValidator));
+builder.Services.AddValidatorsFromAssemblyContaining(typeof(BookUpdateValidator));
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddScoped<IBookBLService, BookBLService>();
 builder.Services.AddScoped<IBookRepository, BookRepository>();

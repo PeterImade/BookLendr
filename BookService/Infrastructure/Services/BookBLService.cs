@@ -72,9 +72,9 @@ namespace BookService.Infrastructure.Services
                 return Result<BookResponseDTO>.Failed("Book not found");
             }
 
-            var bookToUpdate = Mapper.ToUpdatedEntity(bookUpdateRequestDTO);
+            Mapper.MapToExistingEntity(existingBook, bookUpdateRequestDTO);
 
-            var updatedBook = await _bookRepository.UpdateAsync(bookToUpdate, cancellationToken);
+            var updatedBook = await _bookRepository.UpdateAsync(existingBook, cancellationToken);
 
             var result = Mapper.ToDTO(updatedBook);
 

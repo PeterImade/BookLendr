@@ -9,9 +9,10 @@ namespace LendingService.Domain.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         public int BookId { get; set; }
-        public int BorrowerUserId { get; set; }
+        public int UserId { get; set; }
         public DateTime LendDate { get; set; } = DateTime.UtcNow;
+        public DateTime DueDate { get; set; }
         public DateTime? ReturnDate { get; set; }
-        public bool IsReturned => ReturnDate.HasValue;
+        public Status Status { get; set; } 
     }
 }

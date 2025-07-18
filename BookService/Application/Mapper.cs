@@ -11,18 +11,16 @@ namespace BookService.Application
             {
                 Title = requestDTO.Title,
                 Author = requestDTO.Author,
+                Quantity = requestDTO.Quantity,
                 ISBN = requestDTO.ISBN
             };
         }
-        public static Book ToUpdatedEntity(BookUpdateRequestDTO updateRequestDTO)
+        public static void MapToExistingEntity(Book entity, BookUpdateRequestDTO bookUpdateRequestDTO)
         {
-            return new Book
-            {
-                Id = updateRequestDTO.Id,
-                Title = updateRequestDTO.Title,
-                Author = updateRequestDTO.Author,
-                ISBN = updateRequestDTO.ISBN
-            };
+            entity.Title = bookUpdateRequestDTO.Title;
+            entity.ISBN = bookUpdateRequestDTO.ISBN;
+            entity.Quantity = bookUpdateRequestDTO.Quantity;
+            entity.Author = bookUpdateRequestDTO.Author; 
         }
 
         public static BookResponseDTO ToDTO(Book book)
@@ -33,7 +31,7 @@ namespace BookService.Application
                 Title = book.Title,
                 Author = book.Author,
                 ISBN = book.ISBN,
-                IsAvailable = book.IsAvailable,
+                Quantity = book.Quantity,
                 CreatedAt = book.CreatedAt
             };
         }

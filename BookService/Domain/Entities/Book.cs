@@ -11,7 +11,7 @@ namespace BookService.Domain.Entities
         public string Title { get; set; } = string.Empty;
         public string Author { get; set; } = string.Empty;
         public string ISBN { get; set; } = string.Empty;
-        public bool IsAvailable { get; set; } = true;
+        public int Quantity { get; set; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

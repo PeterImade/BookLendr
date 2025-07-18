@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using UserService.Application;
 using UserService.Application.DTOs;
 using UserService.Domain.Entities;
 using UserService.Exceptions;
@@ -32,23 +33,12 @@ namespace UserService.Infrastructure.Services
 
             var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password);
 
-            var user = new User
-            {
-                Email = registerDTO.Email,
-                FirstName = registerDTO.FirstName,
-                LastName = registerDTO.LastName,
-                PasswordHash = hashedPassword
-            };
+
+            var user = Mapper.ToEntity(registerDTO, hashedPassword);
 
             var createdUser = await _userRepository.CreateUser(user, cancellationToken);
 
-            var userResponseDTO = new UserResponseDTO
-            {
-                Id = createdUser.Id,
-                Email = createdUser.Email,
-                FirstName = createdUser.FirstName,
-                LastName = createdUser.LastName
-            };
+            var userResponseDTO = Mapper.ToDTO(createdUser);
 
             return userResponseDTO;
         }

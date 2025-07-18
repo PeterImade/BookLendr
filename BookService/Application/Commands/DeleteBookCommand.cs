@@ -1,14 +1,15 @@
 ﻿using BookService.Application.Interfaces;
+using Contracts.Results;
 using MediatR;
 
 namespace BookService.Application.Commands
 {
-    public class DeleteBookCommand: IRequest<Unit>
+    public class DeleteBookCommand: IRequest<Result>
     {
         public required int Id { get; set; }
     }
 
-    public class DeleteBookCommandHandler : IRequestHandler<DeleteBookCommand, Unit>
+    public class DeleteBookCommandHandler : IRequestHandler<DeleteBookCommand, Result>
     {
         private readonly IBookBLService _bookBLService;
 
@@ -16,10 +17,9 @@ namespace BookService.Application.Commands
         {
             _bookBLService = bookBLService;
         }
-        public async Task<Unit> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(DeleteBookCommand request, CancellationToken cancellationToken)
         {
-            await _bookBLService.DeleteBookAsync(request.Id, cancellationToken);
-            return Unit.Value;
+           return await _bookBLService.DeleteBookAsync(request.Id, cancellationToken);
         }
     }
 }

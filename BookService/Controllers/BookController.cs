@@ -1,6 +1,7 @@
 ﻿using BookService.Application.Commands;
 using BookService.Application.DTOs;
 using BookService.Application.Queries;
+using Contracts.Models;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -38,6 +39,7 @@ namespace BookService.Controllers
             return StatusCode(StatusCodes.Status201Created, createdBook.Value);
         }
 
+        [Authorize]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetBook([FromRoute]int id, CancellationToken cancellationToken)
         {
@@ -45,9 +47,13 @@ namespace BookService.Controllers
             
             var result = await _mediator.Send(query, cancellationToken);
 
+            if (result.Value is null)
+                return NotFound(result.Error);
+
             return Ok(result.Value);
         }
 
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetBooks(CancellationToken cancellationToken)
         {
@@ -63,7 +69,11 @@ namespace BookService.Controllers
         public async Task<IActionResult> DeleteBook([FromRoute] int id, CancellationToken cancellationToken)
         {
             var command = new DeleteBookCommand { Id = id };
-            await _mediator.Send(command, cancellationToken);
+            var result = await _mediator.Send(command, cancellationToken);
+
+            if (result.isFailed)
+                return NotFound(result.Error);
+            
             return NoContent();
         }
 
@@ -73,6 +83,10 @@ namespace BookService.Controllers
         {
             var command = new UpdateBookCommand { BookUpdateRequestDTO = updateRequestDTO };
             var result = await _mediator.Send(command, cancellationToken);
+
+            if (result.isFailed)
+                return NotFound(result.Error);
+            
             return Ok(result.Value);
         }
     }

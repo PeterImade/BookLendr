@@ -30,9 +30,8 @@ namespace UserService.Controllers
         public async Task<IActionResult> LoginUser([FromBody] UserLoginDTO loginDTO)
         {
             var command = new LoginUserCommand { UserLoginDTO  = loginDTO };
-            await _mediator.Send(command);
-
-            return Ok(command);
+            var result = await _mediator.Send(command);
+            return Ok(result);
         }
 
         [HttpGet] 

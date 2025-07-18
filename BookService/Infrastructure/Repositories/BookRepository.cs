@@ -16,7 +16,7 @@ namespace BookService.Infrastructure.Repositories
 
         public async Task<Book> CreateAsync(Book book, CancellationToken cancellationToken)
         {
-            var createdBook = await _context.AddAsync(book);
+            var createdBook = await _context.Books.AddAsync(book);
             await _context.SaveChangesAsync(cancellationToken);
             return createdBook.Entity;
         }
