@@ -12,10 +12,11 @@ namespace LendingService.Infrastructure.Repositories
         {
             _context = context;
         }
-        public async Task CreateAsync(Lending lending, CancellationToken cancellationToken)
+        public async Task<Lending> CreateAsync(Lending lending, CancellationToken cancellationToken)
         {
-            await _context.Lendings.AddAsync(lending, cancellationToken);
+            var lend = await _context.Lendings.AddAsync(lending, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
+            return lend.Entity;
         }
     }
 }

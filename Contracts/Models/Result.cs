@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Contracts.Results
 {
-    public sealed class Result<T> where T : class
+    public sealed class Result<T>
     {
         public bool isSuccess { get; }
         public bool isFailed => !isSuccess;

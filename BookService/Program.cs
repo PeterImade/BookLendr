@@ -2,12 +2,14 @@ using BookService.Application.Commands;
 using BookService.Application.Extensions;
 using BookService.Application.Interfaces;
 using BookService.Application.Validators;
+using BookService.Consumers;
 using BookService.Infrastructure.Data;
 using BookService.Infrastructure.Repositories;
 using BookService.Infrastructure.Services;
 using Contracts.Extensions;
 using FluentValidation;
 using FluentValidation.AspNetCore;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -29,6 +31,25 @@ builder.Services.AddMediatR(cfg =>
         typeof(Program).Assembly,
         typeof(CreateBookCommand).Assembly //test this
     );
+});
+
+builder.Services.AddMassTransit(options =>
+{
+    options.AddConsumer<CheckBookAvailabilityConsumer>();
+
+    options.UsingRabbitMq((context, configuration) =>
+    {
+        configuration.Host("localhost", "/", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+
+        configuration.ReceiveEndpoint("check-book-availability", e =>
+        {
+            e.ConfigureConsumer<CheckBookAvailabilityConsumer>(context);
+        });
+    });
 });
 
 builder.Services.AddValidatorsFromAssemblyContaining(typeof(BookValidator));

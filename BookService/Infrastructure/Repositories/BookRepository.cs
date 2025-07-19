@@ -21,7 +21,7 @@ namespace BookService.Infrastructure.Repositories
             return createdBook.Entity;
         }
 
-        public async Task<Book?> GetByIdAsync(int id,CancellationToken cancellationToken)
+        public async Task<Book?> GetByIdAsync(int id, CancellationToken? cancellationToken)
         {
             var book = await _context.Books.FindAsync(id, cancellationToken);
             return book;

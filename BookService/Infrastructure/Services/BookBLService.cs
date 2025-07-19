@@ -37,7 +37,7 @@ namespace BookService.Infrastructure.Services
             return Result.Success();
         }
 
-        public async Task<Result<BookResponseDTO>> GetBookAsync(int id, CancellationToken cancellationToken)
+        public async Task<Result<BookResponseDTO>> GetBookAsync(int id, CancellationToken? cancellationToken)
         { 
             var book = await _bookRepository.GetByIdAsync(id, cancellationToken);
 
