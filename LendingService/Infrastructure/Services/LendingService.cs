@@ -23,7 +23,7 @@ namespace LendingService.Infrastructure.Services
             _bookServiceClient = bookServiceClient;
         }
 
-        public async Task<bool> CheckBookAvailability(int bookId, CancellationToken cancellationToken)
+        public async Task<(bool, string?)> CheckBookAvailability(int bookId, CancellationToken cancellationToken)
         {
            var response = await _client.GetResponse<CheckBookAvailabilityResponse>
            (
@@ -32,14 +32,14 @@ namespace LendingService.Infrastructure.Services
                    BookId = bookId
                }
            );
-            return response.Message.IsAvailable;
+            return (response.Message.IsAvailable, response.Message.BookTitle);
         }
 
         public async Task<Result<LendingResponse>> LendAsync(LendRequest lendRequest, int userId, string userEmail, CancellationToken cancellationToken)
         {
-            var isAvailable = await CheckBookAvailability(lendRequest.BookId, cancellationToken);
+            var bookAvailability = await CheckBookAvailability(lendRequest.BookId, cancellationToken);
 
-            if (!isAvailable)
+            if (!bookAvailability.Item1)
             {
                 return Result<LendingResponse>.Failed("Book is not available");
             }
@@ -65,6 +65,7 @@ namespace LendingService.Infrastructure.Services
             {
                 BookId = lendRequest.BookId,
                 UserId = userId,
+                BookTitle = bookAvailability.Item2,
                 UserEmail = userEmail,
                 DueDate = DateTime.Now.AddDays(7)
             });

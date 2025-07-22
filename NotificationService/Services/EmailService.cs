@@ -1,10 +1,11 @@
 ﻿using MimeKit;
+using NotificationService.Application.Interfaces;
 using System.Net;
 using System.Net.Mail;
 
 namespace NotificationService.Services
 {
-    public class EmailService
+    public class EmailService: IEmailService
     {
         private readonly IConfiguration _configuration;
 

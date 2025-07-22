@@ -1,5 +1,6 @@
 using MassTransit;
 using NotificationService.Application.Consumers;
+using NotificationService.Application.Interfaces;
 using NotificationService.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,7 +31,7 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
-builder.Services.AddScoped<EmailService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 
 var app = builder.Build();

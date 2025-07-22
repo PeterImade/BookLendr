@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace Contracts.Events
 {
-    public class BookLentEvent
+    public class ReminderEmailEvent
     {
-        public int UserId { get; set; }
-        public int BookId { get; set; }
-        public string BookTitle { get; set; }
+        public string UserEmail { get; set; } = string.Empty;
+        public string BookTitle { get; set; } = string.Empty;
+
         public DateTime DueDate { get; set; }
-        public string UserEmail { get; set; }
     }
 }

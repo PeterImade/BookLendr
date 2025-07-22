@@ -7,6 +7,6 @@ namespace LendingService.Application.Interfaces
     {
 
         Task<Result<LendingResponse>> LendAsync(LendRequest lendRequest, int userId, string userEmail, CancellationToken cancellationToken);
-        Task<bool> CheckBookAvailability(int bookId, CancellationToken cancellationToken);
+        Task<(bool, string?)> CheckBookAvailability(int bookId, CancellationToken cancellationToken);
     }
 }

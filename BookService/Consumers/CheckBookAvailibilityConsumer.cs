@@ -31,7 +31,7 @@ namespace BookService.Consumers
 
             await context.RespondAsync(new CheckBookAvailabilityResponse
             {
-                BookId = book.Value.Id,
+                BookTitle = book.Value.Title,
                 IsAvailable = isAvailable
             });
         }
