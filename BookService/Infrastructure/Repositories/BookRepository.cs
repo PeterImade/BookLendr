@@ -23,7 +23,7 @@ namespace BookService.Infrastructure.Repositories
 
         public async Task<Book?> GetByIdAsync(int id, CancellationToken? cancellationToken)
         {
-            var book = await _context.Books.FindAsync(id, cancellationToken);
+            var book = await _context.Books.FirstOrDefaultAsync(x => x.Id == id); 
             return book;
         }
 

@@ -3,10 +3,11 @@ using LendingService.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace LendingService.Controllers
 {
-    [Route("api/lendings")]
+    [Route("lendings")]
     [ApiController]
     public class LendingController: ControllerBase
     {
@@ -21,12 +22,19 @@ namespace LendingService.Controllers
         [HttpPost]
         public async Task<IActionResult> LendBook([FromBody] LendRequest lendRequest, CancellationToken cancellationToken)
         {
-            if (!int.TryParse(HttpContext.User?.FindFirst("Id")?.Value, out var userId))
+            if (!int.TryParse(HttpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value, out var userId))
             {
                 return BadRequest("Invalid user ID.");
             }
 
-            var response = await _lendingService.LendAsync(lendRequest, userId, cancellationToken);
+            var userEmail = HttpContext.User?.Claims?.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
+
+            if (userEmail is null)
+            {
+                return BadRequest("Invalid user email.");
+            }
+
+            var response = await _lendingService.LendAsync(lendRequest, userId, userEmail, cancellationToken);
 
             if (response.isFailed)
             {

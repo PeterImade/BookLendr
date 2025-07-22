@@ -1,7 +1,10 @@
 using BookService.Application.Extensions;
 using Contracts.Events;
 using Contracts.Extensions;
+using LendingService.Application.Interfaces;
 using LendingService.Infrastructure.Data;
+using LendingService.Infrastructure.Repositories;
+using LendingService.Infrastructure.Services;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 
@@ -20,6 +23,12 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.ConfigureJWT(builder.Configuration);
 builder.Services.AddExceptionHandler<GlobalErrorMiddleware>();
 builder.Services.AddProblemDetails();
+builder.Services.AddScoped<ILendingRepository, LendingRepository>();
+builder.Services.AddScoped<ILendingService, LendingBLService>();
+builder.Services.AddHttpClient<BookServiceClient>(client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5115");
+});
 
 builder.Services.AddMassTransit(x =>
 {

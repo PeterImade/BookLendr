@@ -19,6 +19,16 @@ namespace BookService.Consumers
 
             bool isAvailable = book != null && book.Value?.Quantity > 0;
 
+            if (!isAvailable)
+            {
+                await context.RespondAsync(new CheckBookAvailabilityResponse
+                {
+                    IsAvailable = isAvailable
+                });
+
+                return;
+            }
+
             await context.RespondAsync(new CheckBookAvailabilityResponse
             {
                 BookId = book.Value.Id,

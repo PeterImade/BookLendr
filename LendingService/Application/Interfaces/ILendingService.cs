@@ -6,7 +6,7 @@ namespace LendingService.Application.Interfaces
     public interface ILendingService
     {
 
-        Task<Result<LendingResponse>> LendAsync(LendRequest lendRequest, int userId, CancellationToken cancellationToken);
+        Task<Result<LendingResponse>> LendAsync(LendRequest lendRequest, int userId, string userEmail, CancellationToken cancellationToken);
         Task<bool> CheckBookAvailability(int bookId, CancellationToken cancellationToken);
     }
 }

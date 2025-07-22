@@ -31,8 +31,7 @@ namespace UserService.Infrastructure.Services
             if (userExists)
                 throw new BadRequestException("Email is already taken");
 
-            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password);
-
+            var hashedPassword = BCrypt.Net.BCrypt.HashPassword(registerDTO.Password); 
 
             var user = Mapper.ToEntity(registerDTO, hashedPassword);
 

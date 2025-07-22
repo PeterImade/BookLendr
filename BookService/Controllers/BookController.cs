@@ -89,5 +89,16 @@ namespace BookService.Controllers
             
             return Ok(result.Value);
         }
+
+        [HttpPut("{id:int}/decrease-quantity")]
+        public async Task<IActionResult> DecreaseBookQuantity([FromRoute] int id, CancellationToken cancellationToken)
+        {
+            var command = new DecreaseBookQuantityCommand { Id = id };
+
+            await _mediator.Send(command, cancellationToken);
+
+            return NoContent();
+        }
+
     }
 }
