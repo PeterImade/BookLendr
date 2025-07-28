@@ -35,9 +35,16 @@ namespace LendingService.Infrastructure.Services
             return (response.Message.IsAvailable, response.Message.BookTitle);
         }
 
-        public Task<Result<LendingResponse>> GetLendingAsync(int id, CancellationToken cancellationToken)
+        public async Task<Result<LendingResponse>> GetLendingAsync(int id, CancellationToken cancellationToken)
         { 
+            var lending = await _lendingRepository.GetLendingAsync(id, cancellationToken);
 
+            if (lending is null)
+                return Result<LendingResponse>.Failed($"Lending with the id:{id} not found");
+
+            var response = Mapper.MapToDto(lending);
+
+            return Result<LendingResponse>.Success(response);
         }
 
         public async Task<Result<IEnumerable<LendingResponse>>> GetLendingsAsync(CancellationToken cancellationToken)

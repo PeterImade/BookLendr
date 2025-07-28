@@ -51,5 +51,14 @@ namespace LendingService.Controllers
             var response = _lendingService.GetLendingsAsync(cancellationToken);
             return Ok(response);
         }
+        
+        [Authorize(Roles = "Admin")]
+        [HttpGet("{id:int}")]
+        public async Task<IActionResult> GetLending([FromRoute] int id, CancellationToken cancellationToken)
+        {
+            var response = _lendingService.GetLendingAsync(id, cancellationToken);
+
+            return Ok(response);
+        }
     }
 }
