@@ -46,7 +46,7 @@ namespace LendingService.Infrastructure.Services
 
             var lending = new Lending
             {
-                BookId = lendRequest.BookId, 
+                BookId = lendRequest.BookId,
                 UserId = userId,
                 DueDate = DateTime.Now.AddDays(7),
                 Status = Status.Lent,

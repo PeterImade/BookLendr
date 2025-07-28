@@ -6,13 +6,14 @@ using System.Security.Cryptography;
 using System.Text;
 using UserService.Application;
 using UserService.Application.DTOs;
+using UserService.Application.Interfaces;
 using UserService.Domain.Entities;
 using UserService.Exceptions;
 using UserService.Infrastructure.Repositories;
 
 namespace UserService.Infrastructure.Services
 {
-    public class UserBLService
+    public class UserBLService: IUserService
     {
         private readonly UserRepository _userRepository;
         private readonly IConfiguration _configuration;

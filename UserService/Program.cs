@@ -10,6 +10,9 @@ using UserService.Application.DTOs;
 using FluentValidation.AspNetCore;
 using MassTransit;
 using UserService.Infrastructure.Services;
+using UserService.Application.Interfaces;
+using Hangfire;
+using UserService.Infrastructure.Workers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,8 +24,8 @@ builder.Services.AddControllers().AddFluentValidation(fv => fv.RegisterValidator
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<ApplicationDbContext>(x => x.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-builder.Services.AddScoped<UserRepository>();
-builder.Services.AddScoped<UserBLService>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IUserService, UserBLService>();
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssemblies(
@@ -40,6 +43,15 @@ builder.Services.AddMassTransit(x => x.UsingRabbitMq((context, cfg) =>
     });
 }));
 
+builder.Services.AddHangfire(config =>
+{
+    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+builder.Services.AddHangfireServer();
+
+RecurringJob.AddOrUpdate<OutboxPublisherService>("publish-outbox-events", service => service.PublishUnsentEventsAsync(), Cron.Minutely);
+
 builder.Services.AddExceptionHandler<GlobalMiddlewareHandler>();
 builder.Services.AddProblemDetails();
 
@@ -55,6 +67,8 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler();
 
 app.UseHttpsRedirection();
+
+app.UseHangfireDashboard();
 
 app.UseAuthorization();
 
