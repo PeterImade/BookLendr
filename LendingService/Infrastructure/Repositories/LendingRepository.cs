@@ -31,5 +31,11 @@ namespace LendingService.Infrastructure.Repositories
             var lending = await _context.Lendings.FindAsync(id, cancellationToken);
             return lending;
         }
+
+        public async Task<Lending?> GetLendingByUserIdAsync(int userId, CancellationToken cancellationToken)
+        {
+            var lending = await _context.Lendings.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
+            return lending;
+        }
     }
 }

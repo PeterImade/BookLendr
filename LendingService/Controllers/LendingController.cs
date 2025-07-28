@@ -48,17 +48,31 @@ namespace LendingService.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllLendings(CancellationToken cancellationToken)
         {
-            var response = _lendingService.GetLendingsAsync(cancellationToken);
-            return Ok(response);
+            var response = await _lendingService.GetLendingsAsync(cancellationToken);
+            return Ok(response.Value);
         }
         
         [Authorize(Roles = "Admin")]
         [HttpGet("{id:int}")]
         public async Task<IActionResult> GetLending([FromRoute] int id, CancellationToken cancellationToken)
         {
-            var response = _lendingService.GetLendingAsync(id, cancellationToken);
+            var response = await _lendingService.GetLendingAsync(id, cancellationToken);
 
-            return Ok(response);
+            if (response.isFailed)
+                return NotFound(response.Error);
+
+            return Ok(response.Value);
+        }
+        
+        [Authorize(Roles = "Admin")] 
+        public async Task<IActionResult> GetLendingByUserId([FromQuery] int userId, CancellationToken cancellationToken)
+        {
+            var response = await _lendingService.GetLendingAsync(userId, cancellationToken);
+
+            if (response.isFailed)
+                return NotFound(response.Error);
+
+            return Ok(response.Value);
         }
     }
 }

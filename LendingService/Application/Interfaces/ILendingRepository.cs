@@ -7,5 +7,6 @@ namespace LendingService.Application.Interfaces
         Task<Lending> CreateAsync(Lending lending, CancellationToken cancellationToken);
         Task<IEnumerable<Lending>> GetAllLendingsAsync(CancellationToken cancellationToken);
         Task<Lending?> GetLendingAsync(int id, CancellationToken cancellationToken);
+        Task<Lending?> GetLendingByUserIdAsync(int userId, CancellationToken cancellationToken);
     }
 }

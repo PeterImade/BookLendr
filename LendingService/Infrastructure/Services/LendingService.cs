@@ -47,6 +47,18 @@ namespace LendingService.Infrastructure.Services
             return Result<LendingResponse>.Success(response);
         }
 
+        public async Task<Result<LendingResponse>> GetLendingByUserIdAsync(int userId, CancellationToken cancellationToken)
+        {
+            var lending = await _lendingRepository.GetLendingByUserIdAsync(userId, cancellationToken);
+
+            if (lending is null)
+                return Result<LendingResponse>.Failed($"Lending with the user id:{userId} not found");
+
+            var response = Mapper.MapToDto(lending);
+
+            return Result<LendingResponse>.Success(response);
+        }
+
         public async Task<Result<IEnumerable<LendingResponse>>> GetLendingsAsync(CancellationToken cancellationToken)
         {
             var lendings = await _lendingRepository.GetAllLendingsAsync(cancellationToken);
