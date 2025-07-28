@@ -43,5 +43,13 @@ namespace LendingService.Controllers
 
             return StatusCode(201, response.Value);
         }
+
+        [Authorize(Roles = "Admin")]
+        [HttpGet]
+        public async Task<IActionResult> GetAllLendings(CancellationToken cancellationToken)
+        {
+            var response = _lendingService.GetLendingsAsync(cancellationToken);
+            return Ok(response);
+        }
     }
 }

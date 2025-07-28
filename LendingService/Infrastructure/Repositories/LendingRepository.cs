@@ -1,6 +1,7 @@
 ﻿using LendingService.Application.Interfaces;
 using LendingService.Domain.Entities;
 using LendingService.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace LendingService.Infrastructure.Repositories
 {
@@ -17,6 +18,18 @@ namespace LendingService.Infrastructure.Repositories
             var lend = await _context.Lendings.AddAsync(lending, cancellationToken);
             await _context.SaveChangesAsync(cancellationToken);
             return lend.Entity;
+        }
+
+        public async Task<IEnumerable<Lending>> GetAllLendingsAsync(CancellationToken cancellationToken)
+        {
+            var lendings = await _context.Lendings.AsNoTracking().ToListAsync(cancellationToken);
+            return lendings;
+        }
+
+        public async Task<Lending?> GetLendingAsync(int id, CancellationToken cancellationToken)
+        {
+            var lending = await _context.Lendings.FindAsync(id, cancellationToken);
+            return lending;
         }
     }
 }
