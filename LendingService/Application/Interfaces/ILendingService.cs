@@ -11,5 +11,6 @@ namespace LendingService.Application.Interfaces
         Task<Result<IEnumerable<LendingResponse>>> GetLendingsAsync(CancellationToken cancellationToken);
         Task<Result<LendingResponse>> GetLendingAsync(int id, CancellationToken cancellationToken);
         Task<Result<LendingResponse>> GetLendingByUserIdAsync(int userId, CancellationToken cancellationToken);
+        Task<Result<LendingResponse>> ReturnBookAsync(int lendingId, CancellationToken cancellationToken);
     }
 }

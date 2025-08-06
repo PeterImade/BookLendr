@@ -15,6 +15,17 @@ namespace BookService.Application
                 ISBN = requestDTO.ISBN
             };
         }
+        
+        public static Book ToBookEntity(BookResponseDTO requestDTO)
+        {
+            return new Book
+            {
+                Title = requestDTO.Title,
+                Author = requestDTO.Author,
+                Quantity = requestDTO.Quantity,
+                ISBN = requestDTO.ISBN
+            };
+        }
         public static void MapToExistingEntity(Book entity, BookUpdateRequestDTO bookUpdateRequestDTO)
         {
             entity.Title = bookUpdateRequestDTO.Title;

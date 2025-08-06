@@ -105,5 +105,33 @@ namespace LendingService.Infrastructure.Services
 
             return Result<LendingResponse>.Success(response);
         }
+
+        public async Task<Result<LendingResponse>> ReturnBookAsync(int lendingId, CancellationToken cancellationToken)
+        {
+            var lending = await _lendingRepository.GetLendingAsync(lendingId, cancellationToken);
+
+            if (lending is null)
+                return Result<LendingResponse>.Failed($"Lending record with the id: {lendingId} not found.");
+
+            if(lending.Status == Status.Returned)
+                return Result<LendingResponse>.Failed($"Book is already returned.");
+
+            lending.Status = Status.Returned;
+            lending.ReturnDate = DateTime.UtcNow;
+
+
+            var updatedLending = await _lendingRepository.UpdateAsync(lending, cancellationToken);
+
+            var bookReturnedEvent = new BookReturnedEvent
+            {
+                BookId = updatedLending.BookId,
+                LendingId = updatedLending.Id,
+                ReturnedAt = updatedLending.ReturnDate.Value
+            };
+
+            await _publishEndpoint.Publish(bookReturnedEvent, cancellationToken);
+
+            return Result<LendingResponse>.Success(null);
+        }
     }
 }

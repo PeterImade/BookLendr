@@ -46,7 +46,7 @@ namespace LendingService.Controllers
 
         [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<IActionResult> GetAllLendings(CancellationToken cancellationToken)
+        public async Task<IActionResult> GetLendings(CancellationToken cancellationToken)
         {
             var response = await _lendingService.GetLendingsAsync(cancellationToken);
             return Ok(response.Value);
@@ -65,9 +65,21 @@ namespace LendingService.Controllers
         }
         
         [Authorize(Roles = "Admin")] 
-        public async Task<IActionResult> GetLendingByUserId([FromQuery] int userId, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetLendingsByUserId([FromQuery] int userId, CancellationToken cancellationToken)
         {
             var response = await _lendingService.GetLendingAsync(userId, cancellationToken);
+
+            if (response.isFailed)
+                return NotFound(response.Error);
+
+            return Ok(response.Value);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> ReturnBook([FromBody] ReturnRequest returnRequest, CancellationToken cancellationToken)
+        {
+            var response = await _lendingService.ReturnBookAsync(returnRequest.LendingId, cancellationToken);
 
             if (response.isFailed)
                 return NotFound(response.Error);

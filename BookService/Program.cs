@@ -36,6 +36,7 @@ builder.Services.AddMediatR(cfg =>
 builder.Services.AddMassTransit(options =>
 {
     options.AddConsumer<CheckBookAvailabilityConsumer>();
+    options.AddConsumer<BookReturnedConsumer>();
 
     options.UsingRabbitMq((context, configuration) =>
     {
@@ -48,6 +49,11 @@ builder.Services.AddMassTransit(options =>
         configuration.ReceiveEndpoint("check-book-availability", e =>
         {
             e.ConfigureConsumer<CheckBookAvailabilityConsumer>(context);
+        });
+        
+        configuration.ReceiveEndpoint("book-returned", e =>
+        {
+            e.ConfigureConsumer<BookReturnedConsumer>(context);
         });
     });
 });

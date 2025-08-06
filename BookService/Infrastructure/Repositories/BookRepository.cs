@@ -40,7 +40,7 @@ namespace BookService.Infrastructure.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Book> UpdateAsync(Book bookToUpdate, CancellationToken cancellationToken)
+        public async Task<Book> UpdateAsync(Book bookToUpdate, CancellationToken? cancellationToken)
         {
             var updatedBook = _context.Books.Update(bookToUpdate);
             await _context.SaveChangesAsync();

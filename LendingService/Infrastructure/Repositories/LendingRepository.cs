@@ -37,5 +37,12 @@ namespace LendingService.Infrastructure.Repositories
             var lending = await _context.Lendings.AsNoTracking().FirstOrDefaultAsync(x => x.UserId == userId, cancellationToken);
             return lending;
         }
+
+        public async Task<Lending> UpdateAsync(Lending lending, CancellationToken cancellationToken)
+        {
+            var updatedLendingRecord = _context.Lendings.Update(lending);
+            await _context.SaveChangesAsync(cancellationToken);
+            return updatedLendingRecord.Entity;
+        }
     }
 }

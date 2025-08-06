@@ -4,4 +4,10 @@
     {
         public int BookId { get; set; }
     }
+
+    public class ReturnRequest
+    {
+        public int LendingId { get; set; }
+    }
+
 }
