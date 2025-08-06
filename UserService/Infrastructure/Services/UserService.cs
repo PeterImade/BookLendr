@@ -15,11 +15,11 @@ namespace UserService.Infrastructure.Services
 {
     public class UserBLService: IUserService
     {
-        private readonly UserRepository _userRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IConfiguration _configuration;
         private User? _user;
 
-        public UserBLService(UserRepository userRepository, IConfiguration configuration)
+        public UserBLService(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
             _configuration = configuration;

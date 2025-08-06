@@ -50,7 +50,7 @@ builder.Services.AddHangfire(config =>
 
 builder.Services.AddHangfireServer();
 
-RecurringJob.AddOrUpdate<OutboxPublisherService>("publish-outbox-events", service => service.PublishUnsentEventsAsync(), Cron.Minutely);
+
 
 builder.Services.AddExceptionHandler<GlobalMiddlewareHandler>();
 builder.Services.AddProblemDetails();
@@ -69,6 +69,8 @@ app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
 app.UseHangfireDashboard();
+
+RecurringJob.AddOrUpdate<OutboxPublisherService>("publish-outbox-events", service => service.PublishUnsentEventsAsync(), Cron.Minutely);
 
 app.UseAuthorization();
 

@@ -14,9 +14,14 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IReminderService, ReminderBLService>();
-builder.Services.AddHangfireServer();
+builder.Services.AddHangfire(config =>
+{
+    config.UseSqlServerStorage(builder.Configuration.GetConnectionString("DefaultConnection"));
+});
 builder.Services.AddMassTransit(x =>
 {
+    x.AddConsumer<BookLentConsumer>();
+
     x.UsingRabbitMq((ctx, cfg) =>
     {
         cfg.Host("localhost", "/", h =>

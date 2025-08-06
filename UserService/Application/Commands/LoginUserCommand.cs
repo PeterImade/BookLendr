@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using UserService.Application.DTOs;
+using UserService.Application.Interfaces;
 using UserService.Infrastructure.Services;
 
 namespace UserService.Application.Commands
@@ -11,9 +12,9 @@ namespace UserService.Application.Commands
 
     public class LoginUserCommandHandler: IRequestHandler<LoginUserCommand, TokenDTO>
     {
-        private readonly UserBLService _userBLService;
+        private readonly IUserService _userBLService;
 
-        public LoginUserCommandHandler(UserBLService userBLService)
+        public LoginUserCommandHandler(IUserService userBLService)
         {
             _userBLService = userBLService;
         }

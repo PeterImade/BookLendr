@@ -1,14 +1,15 @@
 ﻿using Contracts.Events;
 using MassTransit;
+using NotificationService.Application.Interfaces;
 using NotificationService.Services;
 
 namespace NotificationService.Application.Consumers
 {
     public class UserRegisteredConsumer : IConsumer<UserRegisteredEvent>
     {
-        private readonly EmailService _emailService;
+        private readonly IEmailService _emailService;
 
-        public UserRegisteredConsumer(EmailService emailService)
+        public UserRegisteredConsumer(IEmailService emailService)
         {
             _emailService = emailService;
         }

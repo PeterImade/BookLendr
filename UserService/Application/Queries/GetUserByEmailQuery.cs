@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using UserService.Application.DTOs;
+using UserService.Application.Interfaces;
 using UserService.Infrastructure.Services;
 
 namespace UserService.Application.Queries
@@ -11,9 +12,9 @@ namespace UserService.Application.Queries
 
     public class GetUserByEmailQueryHandler : IRequestHandler<GetUserByEmailQuery, UserResponseDTO>
     {
-        private readonly UserBLService _userBLService;
+        private readonly IUserService _userBLService;
 
-        public GetUserByEmailQueryHandler(UserBLService userBLService)
+        public GetUserByEmailQueryHandler(IUserService userBLService)
         {
             _userBLService = userBLService;
         }
